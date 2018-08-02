@@ -1,0 +1,99 @@
+<div class="ui centered grid">
+  <div class="seven wide column">
+    <div class="ui raised attached centered segment" style="margin-top:2rem;padding-bottom:2rem;">
+      <div class="header">Cart Items</div>
+      <table class="ui celled padded table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th> 
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>
+              <h4 class="ui image header">
+                <img src="../../assets/items/{{item.imageUrl}}.svg" class="ui  rounded image">
+                <div class="content">
+                  {{item.name}}
+                  <div class="sub header"><i class="rupee sign icon"></i>{{item.price}}
+                  </div>
+                </div>
+              </h4>
+            </td>
+            <td>
+              
+                <i class="minus icon" (click)="reduce(item)" *ngIf="check" style="color:#f62d89;cursor:pointer;"></i>
+              
+              <strong style="padding-right:0.3rem;">{{item.quantity}}</strong>
+              
+                <i class="add icon" (click)="add(item)" style="color:#f62d89;cursor:pointer;" *ngIf="check"></i>
+              
+            </td>
+            <td><i class="rupee sign icon"></i>{{item.amount}}</td>
+          </tr>
+
+        </tbody>
+
+        <tfoot class="full-width">
+          <tr>
+            <th></th>
+            <th>Total Amount:</th>
+            <th><i class="rupee sign icon"></i>{{totalAmount}}</th>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="ui transparent input full-width" style="width:100%;">
+        <i class="large quote left icon"></i>
+        <input type="text" placeholder="Suggestions if any we'll pass it on" [(ngModel)]="userComments">
+      </div>
+      
+      <div class="extra-content" style="margin-top:1rem;">
+        <div class="ui form">
+          <div class="equal width fields" *ngIf="check">
+            <div class="field">
+              <label>Employee Code*</label>
+              <input type="text" placeholder="Employee Code" [(ngModel)]="employeeCode" (keyup)="validate()">
+              <p class="error" [hidden]="isEmployee">EmployeeCode is invalid
+              </p>
+            </div>
+            <div class="field">
+              <label>Pin*</label>
+              <input type="text" placeholder="Pin" [(ngModel)]="pin" (keyup)="validate()">
+              <p class="error" [hidden]="isPin">Pin is invalid
+              </p>
+            </div>
+            <div class="field">
+              <label>Verify</label>
+              <button class="ui small icon button" [disabled]="verifyDisabled" (click)="checkOut()">
+                <i class="check icon"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="extra-content" *ngIf="!this.check" style="margin-top:0.9rem;">
+          <table class="ui celled table">
+            <tbody>
+              <tr>
+                <td>Total Amount</td>
+                <td>
+                  <strong><i class="rupee sign icon"></i>{{totalAmount}}</strong>
+                </td>
+              </tr>
+              <tr *ngFor="let summary of orderDetails">
+                <td>{{summary.type}}</td>
+                <td><i class="rupee sign icon"></i>{{summary.cash}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>    
+    <div class="ui btn bottom attached button" (click)="createNewOrder()" *ngIf="placeOrder">
+      <i class="add icon"></i>
+      Place Order
+    </div>
+  </div>
+</div>

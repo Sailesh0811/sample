@@ -1,0 +1,157 @@
+<div class="ui container" style="margin-top:2rem;">
+  <div class="ui stackable four column grid">
+    <div class="column">
+      <div class="category search">
+        <div class="ui icon input">
+          <input class="prompt" type="text" placeholder="Search User" [(ngModel)]="query" (keyup)="search()">
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+
+    </div>
+    <div class="column"></div>
+    <div class="column">
+      <button class="ui right floated labeled icon button" style="background-color:#f62d89;color:#ffffff;" (click)="openAddUserModal()">
+        <i class="add icon"></i>
+        Add User
+      </button>
+    </div>
+
+  </div>
+</div>
+<div class="ui centered grid" style="margin-top:5rem;" *ngIf="noResults">
+  <div class="seven wide column">
+    <div class="ui centered basic segment" style="text-align:center;opacity:.7;">
+      <div class="content">
+        No users matched your search
+      </div>
+    </div>
+  </div>
+</div>
+<div style="margin-top:2rem;padding-bottom:2rem;">
+  <div class="ui container">
+    <div class="ui three doubling link cards">
+      <div *ngFor="let user of users" class="ui card" data-title="Click to view" (click)="showUser(user)">
+        <div class="content">
+          <div class="header" style="font-size:1rem;">{{user.firstName}} {{user.lastName}}</div>
+          <div class="meta" style="font-size:.9rem;">{{user.emailId}}</div>
+          <div class="meta" style="font-size:.9rem;">{{user.role}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ui small modal" style="position:relative;" id="update">
+  <div class="header">Update Bytes</div>
+  <div class="content">
+    <form class="ui form" [(formGroup)]="updateForm">
+      <div class="field">
+        Bytes available for {{firstName}}
+        <input type="text" formControlName="bytes" placeholder="Bytes" pattern="[0-9]+">
+        <p class="error" [hidden]="updateForm.controls.bytes.valid || updateForm.controls.bytes.untouched">
+          Enter valid bytes
+        </p>
+      </div>
+      <div class="field">
+        <label>Remarks</label>
+        <input type="text" formControlName="remarks" placeholder="Remarks">
+        <p class="error" [hidden]="updateForm.controls.remarks.valid || updateForm.controls.remarks.untouched">
+          Enter valid remarks
+        </p>
+      </div>
+      <div class="actions">
+        <button class="ui right labeled icon red button" (click)="confirmDelete()">
+          <i class="trash icon"></i>
+          Delete User
+        </button>
+
+        <button class="ui right labeled icon green button" [disabled]="this.updateForm.invalid" (click)="updateBytes()">
+          <i class="right arrow icon"></i>
+          Update
+        </button>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="ui coupled second modal">
+  <div class="header">Delete User</div>
+  <div class="content">
+    Are you sure want to delete {{firstName}}
+  </div>
+  <div class="actions">
+    <button class="ui icon blue button" (click)="closeModal()">
+
+      No
+    </button>
+    <button class="ui  icon red button" (click)="deleteUser()">
+
+      Delete
+    </button>
+  </div>
+</div>
+<div class="ui small modal" id="addUser">
+  <div class="header">Add User</div>
+  <div class="content">
+    <div class="ui form" [(formGroup)]="addUserForm">
+      <div class="field">
+        <label>Name</label>
+        <div class="two fields">
+          <div class="field">
+            <input type="text" formControlName="firstName" placeholder="First Name">
+            <p class="error" [hidden]="addUserForm.controls.firstName.valid || addUserForm.controls.firstName.untouched">Enter valid first name</p>
+          </div>
+          <div class="field">
+            <input type="text" formControlName="lastName" placeholder="Last Name">
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Employee Details</label>
+        <div class="two fields">
+          <div class="field">
+            <input type="text" formControlName="employeeCode" placeholder="Employee Code" pattern="[0-9]{4}">
+            <p class="error" [hidden]="addUserForm.controls.employeeCode.valid || addUserForm.controls.employeeCode.untouched">Enter valid employeecode</p>
+          </div>
+          <div class="field">
+            <input type="text" formControlName="pin" placeholder="Pin" pattern="[0-9]{4}">
+            <p class="error" [hidden]="addUserForm.controls.pin.valid || addUserForm.controls.pin.untouched">Enter valid pin</p>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="two fields">
+          <div class="inline fields">
+            <div class="field" style="margin-left:1.2rem">
+              <div class="ui radio checkbox">
+                <input type="radio" formControlName="role" checked value="employee">
+                <label>Employee</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" formControlName="role"  value="contractor">
+                <label>Contractor</label>
+              </div>
+            </div>
+            <p class="error" [hidden]="addUserForm.controls.role.valid || addUserForm.controls.role.untouched">Select role</p>
+          </div>
+          <div class="field">
+            <div class="ui right labeled input">
+              <input type="text" placeholder="Email id" formControlName="email">
+              <div class="ui dropdown label">
+                <div class="text">@coda.global</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>   
+  </div>
+  <div class="actions">
+      <button class="ui  button" style="background-color:#f62d89;color:#ffffff;" [disabled]="this.addUserForm.invalid" (click)="addUser()">Add User</button>     
+    </div>
+</div>

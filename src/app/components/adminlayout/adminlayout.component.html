@@ -1,0 +1,76 @@
+<div class="layout" style="height:100%;width:100%;margin-top:0%"> 
+  
+  <div class="ui pushable basic segment">
+      <div class="ui sidebar  vertical menu ">
+          <div class="item">
+            <strong style="font-size:2.5rem;">Coda <i style="color:#f62d89;">Bytes</i></strong>
+  
+            </div>
+        <div class="item">
+          <div class="header">Menu</div>
+          <div class="menu">
+          </div>
+        </div>
+        <div class="item">
+            <button class="ui blue button" (click)="creditBytesDetails()">Credit Bytes</button>
+        </div>
+        <div class="item">
+        <button class="ui button"  style="background-color:#f62d89;color:#ffffff;" (click)="logout()">Logout</button>
+        </div>
+      </div>
+     
+          
+        
+        
+      <div class="pusher" style="margin-top:0%;">
+      	
+          
+           <div class="column">
+             <div class="ui massive stackable menu">
+               <a id="mobile_item" class="item"><i class="bars icon"></i></a>
+               <div class="left menu">
+                 <a class="item">
+                    <strong style="font-size:2.5rem;">Coda <i style="color:#f62d89;">Bytes</i></strong>
+                 </a>                
+               </div>
+               <div class="right menu">
+                 <a class="item">
+                   Welcome Admin
+                 </a>
+               </div>
+             </div>
+          
+        
+       
+       </div>
+            
+  
+        <router-outlet>
+          
+        </router-outlet>
+        
+  
+      </div>
+  </div>
+  </div>
+  <div class="ui modal" id="credit-bytes-modal" style="width:400px;position:relative;margin-left:-150px;">
+      <div class="header" style="color:rgb(61, 17, 17)">
+          Credit Bytes
+      </div>
+      <div class="content" style="font-size:18px">
+          <strong>Credit 300 BYTES globally</strong>
+              <div class="left floated time" ng-controller="datCtrl" style="color:brown;font-size:14px;padding-top:1%;">
+                  <i class="clock icon"></i>
+                  Last Byte Update:{{lastcreditedDetails | date:"short"}}
+              </div>
+              <i class="close icon" (click)="closeModal()" style="cursor:pointer;position:absolute;right:1em;top:1em;"></i>
+          </div>
+      <div class="actions">
+          <div class="ui grey button" (click)="closeModal()">
+              Cancel
+          </div>
+          <div class="ui blue button" (click)="creditBytes()">
+              Credit Bytes
+          </div>
+      </div>
+  </div>

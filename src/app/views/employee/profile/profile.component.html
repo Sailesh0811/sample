@@ -1,0 +1,235 @@
+<div class="ui stackable  grid container" style="margin-top:1rem;padding-bottom:2rem;">
+  <div class="one wide column"></div>
+  <div class="three wide column">
+    <div class="ui fluid card" style='margin-top:1rem'>
+      <div class="content">
+        <img class="left floated ui image" style="width:25px"  src="../../../assets/wallet.svg">
+        <div class="header" style="font-size:25px;font-weight:bolder;">
+          Bytes 
+        </div>
+        <div class="description center aligned">
+          <strong style="font-weight:bolder;font-size:48px;">{{bytes}}</strong>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="eight wide column">
+    <div class='ui positive message' id='profileUpdated'>
+      Profile Updated Successfully
+    </div>
+    <div class="ui fluid  card">
+      <div class="content">
+        <form class="ui form" [formGroup]="profileForm" method="POST">
+          <div class="two fields">
+              <div class="field">
+                  <button class="ui icon button" style="margin-top:4.5rem;" (click)="previousAvatar()">
+                    <i class="left arrow icon"></i>
+                  </button>
+                  <div class="ui people shape">
+                    <div class="sides">                       
+                      <div>
+                        <div class="side active">
+                          <div class="ui card" style="background:none;height:120px;width:120px;">
+                            <div class="image" style="background:none;height:120px;width:120px;padding:0.5rem;">
+                              <img src="../../assets/avatar/{{avatarCounter}}.png">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="ui icon button" style="margin-top:4.5rem;margin-left:0.5rem;" (click)="nextAvatar()">
+                    <i class="right arrow icon"></i>
+                  </button>
+
+                </div>
+            <div class="left floated field">
+              <div class="column row">
+                <strong>First name</strong>
+                <div class="ui input" style='margin-top:0.5rem'>
+                  <input type="text" placeholder="First name" pattern="[a-zA-Z]*" formControlName="firstName" (keyup)="verify()" >
+                </div>
+                <p class="error" [hidden]="profileForm.controls.firstName.valid || profileForm.controls.firstName.untouched">
+
+                  Enter valid First name
+                  
+                </p>
+              </div>
+              <div class="column row" style='margin-top:1rem'>
+                <strong>Last name</strong>
+                <div class="ui input" style='margin-top:0.5rem'>
+                  <input type="text" formControlName="lastName"pattern="[a-zA-Z]*" id='lastName' (keyup)="verify()" >
+                </div>
+
+                <p class="error" [hidden]="profileForm.controls.lastName.valid || profileForm.controls.lastName.untouched">
+
+                  Enter valid Last name
+                  
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="two fields">
+          <div class="field">
+            <strong>Email id</strong>
+            <div class="ui disabled input" style='margin-top:0.5rem'>
+              <input type="text" formControlName="emailId" readonly id='emailId'>
+            </div>
+          </div>
+          <div class="field">
+              <strong>Employee Code</strong>
+              <div class="ui disabled input" style='margin-top:0.5rem'>
+                <input type="text" formControlName="employeeCode" readonly id='employeeCode'>
+              </div>
+            </div>
+
+        </div>
+
+          <div class="field">
+            <strong>Mobile number</strong>
+
+            <div class="ui left labeled input" style='margin-top:0.5rem'>
+              <div class="ui label">
+                +91
+              </div>
+              <input type="number" placeholder="enter 10 digit mobile number" formControlName="contactNumber" id='contactNumber' (keyup)="verify()" pattern="[6|7|8|9]{1}[0-9]{9}">
+            </div>
+            <p class="error" [hidden]="profileForm.controls.contactNumber.valid || profileForm.controls.contactNumber.untouched">
+              Enter Valid Mobile number  
+            </p>
+          </div>
+          <div class="two fields">
+
+
+
+            <div class="field">
+              <strong>Pin </strong>
+              <div class="ui action input" style='margin-top:0.5rem'>
+                <input type="password" placeholder="enter 4 digit pin" formControlName="pin" id='pin' (keyup)="verify()" pattern="[0-9]{4}">
+                <div class="ui button" (click)='pinVisibilityChange()'>
+                  <i class="eye icon"></i>           
+                </div>
+              </div>
+              
+              <p class="error" [hidden]="profileForm.controls.pin.valid || profileForm.controls.pin.untouched">
+
+                Pin is invalid
+                
+              </p>
+            </div>
+          </div>
+          <button type="submit" class="ui  right floated button"  (click)="updateProfile()" [disabled]='isDisabled' 
+           style='background-color:#f62d89;margin-bottom:6%;color:white;'>
+            Update Profile
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class='one wide column'></div>
+  <div class="three wide column">
+    <div class="ui vertical buttons ">
+      <button type="button" class="ui  button  " (click)="feedback()" style="margin-top:5%;background-color:#f62d89;margin-bottom:6%;color:white;">
+        Feedback
+      </button>
+      <button type="submit" class="ui  button" (click)="showPasswordForm()" style="margin-top:8%;background-color:#f62d89;margin-bottom:6%;color:white;">
+        Change Password
+      </button>
+    </div>
+  </div>
+
+  <div class="ui medium modal" id='passwordChange' style='margin-top:0;width:35rem;position:relative;margin-left:-200px;'>
+       <div class="ui centered fluid card" style="max-width:35rem" >
+          <div class="content">
+            <form class="ui form" [formGroup]="passwordForm" method="POST">
+              <div class="right aligned" (click)='close()'>
+                <a>
+                  <i class="close basic icon"></i>
+                </a>
+              </div>
+              <p class="ui negative message" id='updateFailed'>
+                Current Password doesnot match
+              </p>
+              <p class="error" id='passwordMismatch'>
+                New Password and confirm  doesnot match
+              </p>
+              <p  id='updateSuccess'class="ui positive message">
+                Password Updated successfully
+              </p>
+
+              <div class="field">
+                <label>Current password</label>
+                <div class="ui input">
+                  <input type="password" style='margin-top:0.5rem' placeholder="Enter your current password" formControlName="password" (keyup)="validate()" id="currentPassword">
+                </div>
+                <p id='currentPassword' class="error" [hidden]="passwordForm.controls.password.valid || passwordForm.controls.password.untouched">
+
+                  Current Password is invalid
+                  
+                </p>
+              </div>
+              <div class="field">
+                <label>New password</label>
+                <div class="ui input">
+                  <input type="password" style='margin-top:0.5rem' formControlName="newPassword"  placeholder="Enter your new password" (keyup)="validate()">
+                </div>
+
+                <p id='newPassword' class="error" [hidden]="passwordForm.controls.newPassword.valid || passwordForm.controls.newPassword.untouched">
+
+                  New Password should contain between 8 - 30 characters
+                  
+                </p>
+              </div>
+              <div class="field">
+                <label>Confirm password</label>
+                <div class="ui input">
+                  <input type="password" style='margin-top:0.5rem' formControlName="confirmPassword"  placeholder="Enter your new password again" (keyup)="validate()">
+                </div>
+
+                <p id='confirmPassword' class="error" [hidden]="passwordForm.controls.confirmPassword.valid || passwordForm.controls.confirmPassword.untouched">
+
+                  Confirm Password should contain between 8 - 30 characters
+                  
+                </p>
+              </div>
+
+              <div class="field">
+                <button type="submit" class="ui right floated button" (click)="updatePassword()" [disabled]='visiblity' style="background-color:#f62d89;margin-bottom:1%;color:white;">
+                  Update Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+</div>
+
+<div class="ui modal" id='feedback' style='margin-top:0;width:35rem;position:relative;margin-left:-200px;'>
+     <div class="ui centered fluid card" >
+        <div class="content">
+          <form class="ui form" [(formGroup)]="feedbackForm" method="POST" style="margin-top:1rem;padding-bottom:2rem;">
+            <div class="right aligned" (click)='close()'>
+              <a>
+                <i class="close basic icon"></i>
+              </a>
+            </div>
+            <div class="ui positive message" id='feedbackSentAlert'>feedback sent successfully</div>
+            <div class="field">
+              <label>Feedbacks/Complaints</label>
+              <div class="ui input"  style='margin-top:0.5rem' >
+                <textarea formControlName="comment"  (keyup)="comments()" id="comment" rows="4" cols="35">
+                  </textarea>
+              </div>
+            </div>
+            <p class="error" [hidden]="feedbackForm.controls.comment.valid || feedbackForm.controls.comment.untouched">
+              Feedbacks/Complaints cannot be empty    
+            </p>
+            <button type="submit" class="ui  right floated button" (click)="sendFeedback()" [disabled]='btnvisibility' style="background-color:#f62d89;margin-bottom:1%;color:white;">
+               
+              Send
+            </button>
+          </form>
+        </div>
+      </div>
+</div>

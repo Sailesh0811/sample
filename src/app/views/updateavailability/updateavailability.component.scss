@@ -1,0 +1,45 @@
+/* For Firefox */
+input[type='number'] {
+    -moz-appearance:textfield;
+ }
+ /* Webkit browsers like Safari and Chrome */
+ input[type=number]::-webkit-inner-spin-button,
+ input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+ }
+ 
+ .ui.toggle.checkbox input:focus:checked~.box:after,
+ .ui.toggle.checkbox input:focus:checked~label:before {
+    background-color: green
+ }
+ 
+ .ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
+    background-color: red;
+ }
+ 
+ .ui.toggle.checkbox input:checked ~ .box:before,
+ .ui.toggle.checkbox input:checked ~ label:before {
+  background-color: green !important;
+ }
+
+ ::-webkit-scrollbar {
+    width: 5px;
+  }
+  .error{
+    color:red;
+    font-size:12px;
+    padding-left:4px;
+}
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

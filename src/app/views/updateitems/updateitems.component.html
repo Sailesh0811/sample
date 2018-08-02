@@ -1,0 +1,75 @@
+<div class="ui stackable  grid container  ">
+    <div class="eight wide column" style="margin-top:6rem;padding-bottom:2rem;">
+      <div class="ui fluid card">
+        <div class="content">
+          <form class="ui form" [(formGroup)]="updateItemForm"  method="POST" >
+            <div class="field">
+              <label>Item name</label>
+              <div class="ui right labeled input">
+                <input type="text" placeholder="Item name" formControlName="itemname" (keyup)="verify()">
+              </div>
+            </div>
+            <div class="ui negative message" [hidden]="updateItemForm.controls.itemname.valid || updateItemForm.controls.itemname.untouched">
+  
+              <p>Item name cannot be empty
+              </p>
+            </div>
+  
+            <div class="field">
+              <label>Item category</label>
+              <div class="ui right labeled input" >
+                <div class="ui buttons" >
+                  <button class="ui button" id="1" (click)="changeprop(1)">
+                    <img class="ui mini image" src="../../../assets/1.svg" >
+                  </button>
+                  <button class="ui button" id="2" (click)="changeprop(2)">
+                    <img class="ui avatar image" src="../../../assets/2.svg">
+                  </button>
+                  <button class="ui button" id="3" (click)="changeprop(3)">
+                    <img class="ui avatar image" src="../../../assets/3.svg" >
+                  </button>
+                </div>
+              </div>
+            </div>
+  
+            <div class="field">
+              <label>Item description</label>
+              <div class="ui right labeled input">
+                <input type="text" placeholder="itemdesc" formControlName="itemdesc" (keyup)="verify()">
+              </div>
+            </div>
+            <div class="ui negative message" [hidden]="updateItemForm.controls.itemdesc.valid || updateItemForm.controls.itemdesc.untouched">
+  
+              <p>Item description cannot be empty
+              </p>
+            </div>
+  
+            <div class="field">
+              <label>Item price</label>
+              <div class="ui right labeled input four wide field">
+                <input type="number" min=1 placeholder="Item price" formControlName="itemprice" (keyup)="verify()">
+              </div>
+            </div>
+            <div class="ui negative message" [hidden]="updateItemForm.controls.itemprice.valid || updateItemForm.controls.itemprice.untouched">
+  
+              <p>Item price cannot be empty
+              </p>
+            </div>
+  
+            <button type="reset" class="ui left labeled icon button" (click)="changeprop(5)">
+                <i class="left arrow icon"></i>
+                Reset
+              </button>
+  
+            <button type="submit" class="ui right labeled icon button" [disabled]="isDisabled" (click)="updateItem()" >
+              <i class="right arrow icon"></i>
+              Next
+            </button>
+     
+           </form>
+          <div *ngIf="visible" style="margin-top:1%;"><div class="ui green message">Item Updated successfully!!</div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>

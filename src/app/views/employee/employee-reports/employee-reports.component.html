@@ -1,0 +1,575 @@
+<div class="ui stackable centered grid " style="margin-top:2%;">
+  <div class="three wide column">
+    <div class="ui fluid link card" (click)="showBytesUsedDetails()">
+      <div class="content">
+        <img class="left floated  ui image" src="../../../assets/wallet.svg">
+        <div class="header" style="margin-top:.25rem">
+          Bytes Used
+        </div>
+        <div class="description center aligned">
+          <strong style="font-weight:bolder;font-size:48px;">{{bytesUsed}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="three wide column">
+    <div class="ui fluid link card" (click)="showCashSpentDetails()">
+      <div class="content">
+        <img class="left floated ui image" src="../../../assets/cash.svg">
+        <div class="header" style="margin-top:.25rem">
+          Cash Spent
+        </div>
+        <div class="description center aligned">
+          <strong style="font-weight:bolder;font-size:48px;">{{cash}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="three wide column">
+    <div class="ui fluid link card" (click)="showSuccessfulOrderDetails()">
+      <div class="content">
+        <img class="left floated  ui image" src="../../../assets/confirmed.svg">
+        <div class="header" style="margin-top:.25rem">
+          Successful Orders
+        </div>
+        <div class="description center aligned">
+          <strong style="font-weight:bolder;font-size:48px;">{{orderCount}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="three wide column">
+    <div class="ui fluid link card" (click)="showDeclinedOrderDetails()">
+      <div class="content">
+        <img class="left floated ui image" src="../../../assets/cancelled.svg">
+        <div class="header" style="margin-top:.25rem">
+          Declined Orders
+        </div>
+        <div class="description center aligned">
+          <strong style="font-weight:bolder;font-size:48px;">{{declinedOrderCount}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="three wide column">
+    <div class="ui fluid link card" (click)="showCancelledOrderDetails()">
+      <div class="content">
+        <img class="left floated  ui image" src="../../../assets/cancelled.svg">
+        <div class="header" style="margin-top:.25rem">
+          Cancelled Orders
+        </div>
+        <div class="description center aligned">
+          <strong style="font-weight:bolder;font-size:48px;">{{cancelledOrderCount}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="ui stackable centered grid ">
+  <div class="three wide column" style='min-width:19%'>
+    <div class="ui fluid card">
+      <div class="content">
+        <form class="ui form" [(formGroup)]="reportsForm" method="POST" style="color:#4DB6AC;">
+          <img class="left floated ui image" src="../../assets/calendar.svg">
+          <div class="header" style="margin-top:.25rem;color:black;font-weight: 700;
+              font-size: 1.28571429em;">
+            Filter by Date
+          </div>
+          <div class="field">
+            <div class="ui calendar">
+              <label>From Date </label>
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="date" value="{{weekBefore | date:'yyyy-MM-dd'}}" max="{{today | date:'yyyy-MM-dd'}}" formControlName="fromDate"
+                  id="fromDate" (change)="fetchreport()" onkeydown="return false" style="border:none">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui calendar">
+              <label>To Date </label>
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="date" value="{{today | date:'yyyy-MM-dd'}}" max="{{today | date:'yyyy-MM-dd'}}" formControlName="toDate" id="toDate"
+                  (change)="fetchreport()" onkeydown="return false" style="border:none">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="three wide column" (click)="showLentDetails()">
+      <div class="ui fluid link card" style="margin-bottom:2rem">
+        <div class="content">
+          <img class="left floated ui image" src="../../../assets/bank.svg">
+          <div class="header" style="margin-top:.25rem">
+            Bytes Lent
+          </div>
+          <div class="description center aligned">
+            <strong style="font-weight:bolder;font-size:48px;">{{lentBytes}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='nine wide column'>
+    <div #chartTarget id="chartone" style="min-height:400px;min-width:350px">
+    </div>
+    <div class="ui centered basic segment four wide column" *ngIf='(itemwisedata.length == 0)' style="text-align:center;opacity:.7;margin-top:11rem">
+      No Transactions Were Found
+    </div>
+  </div>
+  <div class='three wide column'>
+    <div class="ui fluid card ">
+      <div class="content">
+        <img class="left floated ui image" src="../../../assets/high.svg">
+        <div class="header" style="margin-top:.25rem">
+          Frequently Bought Item
+        </div>
+        <div class="description">
+          <div *ngIf='(trendingItems.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of trendingItems ">
+                  <td>
+                    <h4 class="ui image header">
+                      <div class="content">
+                        {{list.name}}
+
+                      </div>
+                    </h4>
+                  </td>
+                  <td>
+                    {{list.quantity}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ui centered basic segment" *ngIf='(trendingItems.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              No Most Bought Category
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="three wide column" (click)="showBorrowDetails()">
+      <div class="ui fluid link card" style="margin-bottom:2rem">
+        <div class="content">
+          <img class="left floated  ui image" src="../../../assets/borrowed.png">
+          <div class="header" style="margin-top:.25rem">
+            Bytes Borrowed
+          </div>
+          <div class="description center aligned">
+            <strong style="font-weight:bolder;font-size:48px;">{{borrowedBytes}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui long modal" id='bytesBorrowed' style='margin-top:0;width:32rem;position:relative;margin-left:-200px;'>
+  <div class="ui centered fluid card" style="max-width:32rem;">
+    <div class="content">
+      <div class="right aligned" (click)='close()'>
+
+        <i class="close basic icon"></i>
+
+      </div>
+      <img class="left floated  ui image" src="../../../assets/borrowed.png">
+      <div class="header" style="margin-top:.25rem">
+        Bytes Borrowed Details
+      </div>
+      <div class="description">
+        <div *ngIf='(bytesBorrowedList.length > 0)'>
+          <table class='ui fluid celled table'>
+            <thead>
+              <tr>
+                <th>Order Id</th>
+                <th>Borrowed From</th>
+                <th>Date</th>
+                <th>Bytes Borrowed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let list of bytesBorrowedList ">
+                <td>
+                  {{list.id}}
+                </td>
+                <td>
+                  {{list.firstName}}
+                </td>
+                <td>
+                  {{list.orderInitiationTime|date:"dd/MM/yyyy"}}
+                </td>
+                <td>
+                  <i class="rupee sign icon"></i>{{list.borrowedBytes}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="ui centered basic segment" *ngIf='(bytesBorrowedList.length == 0)' style="text-align:center;opacity:.7;">
+          <div class="content">
+            There are no transcations to display
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui long modal" id='bytesLent' style='margin-top:0;width:32rem;position:relative;margin-left:-200px;'>
+    <div class="ui centered fluid card" style="max-width:32rem;">
+      <div class="content">
+        <div class="right aligned" (click)='close()'>
+
+          <i class="close basic icon"></i>
+
+        </div>
+        <img class="left floated ui image" src="../../../assets/bank.svg">
+        <div class="header" style="margin-top:.25rem">
+          Bytes Lent Details
+        </div>
+        <div class="description">
+          <div *ngIf='(bytesLentList.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Lent To</th>
+                  <th>Date</th>
+                  <th>Bytes Lent</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of bytesLentList ">
+                  <td>
+                    {{list.id}}
+                  </td>
+                  <td>
+                    {{list.user.firstName}}
+                  </td>
+                  <td>
+                    {{list.orderInitiationTime|date:"dd/MMM/yyyy "}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.borrowedBytes}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="ui centered basic segment" *ngIf='(bytesLentList.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              There are no transcations to display
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui long modal" id='bytesUsed' style='margin-top:0;width:32rem;position:relative;margin-left:-200px;'>
+    <div class="ui centered fluid card" style="max-width:32rem;">
+      <div class="content">
+        <div class="right aligned" (click)='close()'>
+
+          <i class="close basic icon"></i>
+
+        </div>
+        <img class="left floated ui image" src="../../../assets/wallet.svg">
+        <div class="header" style="margin-top:.25rem">
+          Bytes Used Details
+        </div>
+        <div class="description">
+          <div *ngIf='(bytesUsedList.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Date</th>
+                  <th>Bytes Used</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of bytesUsedList ">
+                  <td>
+                    {{list.id}}
+                  </td>
+                  <td>
+                    {{list.orderInitiationTime|date:"dd/MMM/yyyy "}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.amountInBytes}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="ui centered basic segment" *ngIf='(bytesUsedList.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              There are no transcations to display
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui long modal" id='cashSpent' style='margin-top:0;width:32rem;position:relative;margin-left:-200px;'>
+    <div class="ui centered fluid card" style="max-width:32rem;">
+      <div class="content">
+        <div class="right aligned" (click)='close()'>
+
+          <i class="close basic icon"></i>
+
+        </div>
+        <img class="left floated ui image" src="../../../assets/cash.svg">
+        <div class="header" style="margin-top:.25rem">
+          Cash Spent Details
+        </div>
+        <div class="description">
+          <div *ngIf='(cashSpentList.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Date</th>
+                  <th>Cash Spent</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of cashSpentList ">
+                  <td>
+                    {{list.id}}
+                  </td>
+                  <td>
+                    {{list.orderInitiationTime|date:"dd/MMM/yyyy "}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.amountInCash}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="ui centered basic segment" *ngIf='(cashSpentList.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              There are no transcations to display
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui long modal" id='successfulOrders' style='margin-top:0;width:45rem;position:relative;margin-left:-260px;'>
+    <div class="ui centered fluid card" style="max-width:45rem;">
+      <div class="content">
+        <div class="right aligned" (click)='close()'>
+
+          <i class="close basic icon"></i>
+
+        </div>
+        <img class="left floated ui image" src="../../../assets/confirmed.svg">
+        <div class="header" style="margin-top:.25rem">
+          Successful Order Details
+        </div>
+        <div class="description">
+          <div *ngIf='(successfulOrdersList.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Date</th>
+                  <th>Bytes</th>
+                  <th>Borrow</th>
+                  <th>Cash</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of successfulOrdersList ">
+                  <td>
+                    {{list.id}}
+                  </td>
+                  <td>
+                    {{list.orderInitiationTime|date:"dd/MMM/yyyy "}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.amountInBytes}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.borrowedBytes}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.amountInCash}}
+                  </td>
+                  <td>
+                    <i class="rupee sign icon"></i>{{list.totalAmount}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="ui centered basic segment" *ngIf='(successfulOrdersList.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              There are no transcations to display
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui long modal" id='cancelledOrders' style='margin-top:0;width:45rem;position:relative;margin-left:-260px;'>
+    <div class="ui centered fluid card" style="max-width:45rem;">
+      <div class="content">
+        <div class="right aligned" (click)='close()'>
+
+          <i class="close basic icon"></i>
+
+        </div>
+        <img class="left floated ui image" src="../../../assets/cancelled.svg">
+        <div class="header" style="margin-top:.25rem">
+          Cancelled Order Details
+        </div>
+        <div class="description">
+          <div *ngIf='(cancelledOrdersList.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Date</th>
+                  <th>Bytes</th>
+                  <th>Borrow</th>
+                  <th>Cash</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of cancelledOrdersList ">
+                  <td>
+                    {{list.id}}
+                  </td>
+                  <td>
+                    {{list.orderInitiationTime|date:"dd/MMM/yyyy "}}
+                  </td>
+                  <td>
+                      <i class="rupee sign icon"></i>{{list.amountInBytes}}
+                    </td>
+                    <td>
+                      <i class="rupee sign icon"></i>{{list.borrowedBytes}}
+                    </td>
+                    <td>
+                      <i class="rupee sign icon"></i>{{list.amountInCash}}
+                    </td>
+                    <td>
+                      <i class="rupee sign icon"></i>{{list.totalAmount}}
+                    </td>
+  
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="ui centered basic segment" *ngIf='(cancelledOrdersList.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              There are no transcations to display
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui long modal" id='declinedOrders' style='margin-top:0;width:45rem;position:relative;margin-left:-260px;'>
+    <div class="ui centered fluid card" style="max-width:45rem;">
+      <div class="content">
+        <div class="right aligned" (click)='close()'>
+
+          <i class="close basic icon"></i>
+
+        </div>
+        <img class="left floated ui image" src="../../../assets/cancelled.svg">
+        <div class="header" style="margin-top:.25rem">
+          Declined Order Details
+        </div>
+        <div class="description">
+          <div *ngIf='(declinedOrdersList.length > 0)'>
+            <table class='ui fluid celled table'>
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Date</th>
+                  <th>Bytes</th>
+                  <th>Borrow</th>
+                  <th>Cash</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let list of declinedOrdersList ">
+                  <td>
+                    {{list.id}}
+                  </td>
+                  <td>
+                    {{list.orderInitiationTime|date:"dd/MMM/yyyy "}}
+                  </td>
+                  <td>
+                      <i class="rupee sign icon"></i>{{list.amountInBytes}}
+                    </td>
+                    <td>
+                      <i class="rupee sign icon"></i>{{list.borrowedBytes}}
+                    </td>
+                    <td>
+                      <i class="rupee sign icon"></i>{{list.amountInCash}}
+                    </td>
+                    <td>
+                      <i class="rupee sign icon"></i>{{list.totalAmount}}
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="ui centered basic segment" *ngIf='(declinedOrdersList.length == 0)' style="text-align:center;opacity:.7;">
+            <div class="content">
+              There are no transcations to display
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>

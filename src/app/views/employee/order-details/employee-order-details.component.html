@@ -1,0 +1,105 @@
+<style>
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+<div class="container" style="padding-bottom:2%;max-width:1000px;margin:0 auto;" *ngIf="(orders?.length) > 0">
+    <div class="ui three column stackable grid" style="max-width:1000px;position:relative;top:20px;left:20px">
+        <div class="column" *ngFor="let order of orders, let orderCount=index;">
+            <div class="ui raised link card">
+                <div class="header" style="height:40px">
+                    <div class="ui left floated" style="position:relative;margin-left:13px;">
+                        <div class="ui yellow ribbon label" *ngIf="order.status == ('PENDING')" style="font-size: 12px;">
+                            {{order.status}}
+                        </div>
+                        <div class="ui blue ribbon label" *ngIf="order.status == ('PICKUP')" style="font-size: 12px;">
+                            {{order.status}}
+                        </div>
+                        <div class="ui pink ribbon label" *ngIf="order.status == ('CONFIRMED')" style="font-size: 12px;">
+                            {{order.status}}
+                        </div>
+                    </div>
+                    <div class="ui right floated" style="position:relative;margin-left:20px;">
+                        <div class="ui yellow tag label" *ngIf="order.status == ('PENDING')" style="font-size: 12px;">
+                            Order Id: {{order.id}}
+                        </div>
+                        <div class="ui blue tag label" *ngIf="order.status == ('PICKUP')" style="font-size: 12px;">
+                            Order Id: {{order.id}}
+                        </div>
+                        <div class="ui pink tag label" *ngIf="order.status == ('CONFIRMED')" style="font-size: 12px;">
+                            Order Id: {{order.id}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="content" style="height:250px;">
+                    <table class="ui single line celled unstackable table" style="display: inline-block; overflow-y: auto;max-height:200px;font-size:11px">
+                        <thead>
+                            <tr>
+                                <th class="one wide">S.no</th>
+                                <th class="eleven wide">Items</th>
+                                <th class="two wide">Qty</th>
+                                <th class="two wide">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let items of order.items, let serialNumber=index">
+                                <td> {{serialNumber+1}}</td>
+                                <td> {{items.name}}</td>
+                                <td>{{items.quantity}}</td>
+                                <td>
+                                    <i class="rupee sign icon"></i>{{items.price * items.quantity}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="extra content">
+                    <div class="ui left floated" style="font-size:12px;">
+                        Amt in Bytes:
+                        <i class="rupee sign icon"></i>
+                        <strong> {{order.amountInBytes}}</strong>
+                    </div>
+                    <div class="ui right floated" style="font-size:12px;">
+                        Amt in Cash:
+                        <i class="rupee sign icon"></i>
+                        <strong> {{order.amountInCash}}</strong>
+                    </div>
+                </div>
+                <div class="extra content" style="color:black; height:60px;">
+                    <div *ngIf="(order.status)==('PENDING')" class="ui left floated grey button" style="text-align:center;width:80px" (click)="cancelOrder(order)">
+                        Cancel
+                    </div>
+                    <div *ngIf="(order.status)!=('PENDING')" class="ui left floated grey button" style="text-align:center;width:80px;visibility:hidden"
+                        (click)="cancelOrder(order)">
+                        Cancel
+                    </div>
+                    <div class="ui right floated" style="padding-top:1%">
+                        Total Amount:
+                        <i class="rupee sign icon"></i> {{order.totalAmount}}
+                    </div>
+                    <div class="right floated time" ng-controller="datCtrl" style="color:grey;margin-top:3px;">
+                        <i class="clock icon"></i>
+                        {{order.orderInitiationTime | date:"short"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui centered basic segment" *ngIf='(orders)==null || (orders.length)==0' style="text-align:center;opacity:.7;margin-top:7rem;">
+    <div class="content">
+        No active orders
+    </div>
+</div>

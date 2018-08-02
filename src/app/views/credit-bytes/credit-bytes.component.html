@@ -1,0 +1,24 @@
+<div class="ui blue button centered" (click)="creditBytesDetails()"> Credit Bytes</div>
+<div class="ui modal" id="credit-bytes-modal" style="width:400px;position:relative;margin-left:-150px;">
+    <div class="header">
+        Credit Bytes
+    </div>
+    <div class="content" style="font-size:14px">
+        <strong>Credit 300 BYTES globally</strong>
+    </div>
+    <div class="extra content">
+            <div class="left floated time" ng-controller="datCtrl" style="color:grey;font-size:14px">
+                <i class="clock icon"></i>
+                Last Byte Update:{{lastcreditedDetails | date:"short"}}
+            </div>
+            <i class="close icon" (click)="closeModal()" style="cursor:pointer;position:absolute;right:1em;top:0.5em;"></i>
+        </div>
+    <div class="extra content">
+        <div class="ui blue button" (click)="creditBytes()">
+            Credit Bytes
+        </div>
+        <div class="ui grey button" (click)="closeModal()">
+            Cancel
+        </div>
+    </div>
+</div>

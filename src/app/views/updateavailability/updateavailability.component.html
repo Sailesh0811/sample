@@ -1,0 +1,150 @@
+<div class="ui grid" style="margin-top:2rem;margin-bottom:1rem;">
+  <div class="one wide column"></div>
+  <div class="four wide column">
+    <div class="ui simple inline dropdown" style='margin-left:1.5rem'>
+      <div class="text">
+        <img class="ui avatar image" src="../../assets/all.svg"> All
+      </div>
+      <i class="dropdown icon"></i>
+      <div class="menu" style="display:inline-block;overflow-y:auto;height:200px;border:0.5px solid rgb(235, 232, 232)">
+        <div class="item" *ngFor="let cat of category" (click)="changeprop(cat.id)">
+          <img class="ui avatar image" src="../../assets/items/{{cat.id}}.svg"> {{cat.name}}
+        </div>
+        <div class="item" (click)="changeprop(100)">
+          <img class="ui avatar image" src="../../assets/all.svg"> All
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="seven wide column"></div>
+  <div class="four wide column">
+    <div class="ui category search" (keyup)='checkStatus()'>
+      <div class="ui icon input">
+        <input class="prompt" type="text" placeholder="Search Food" [(ngModel)]="query">
+        <i class="search icon"></i>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="margin-top: 1.0rem;padding-bottom:2rem;">
+  <div class="ui container">
+    <div class="ui four link doubling cards" style="padding-bottom:3rem;">
+      <div *ngFor="let item of itemarray" class="ui card">
+
+
+        <div class="ui centered image" (click)="viewOptions(item)" style="background:white;padding:1rem;">
+          <img src="../../assets/items/{{item.imageUrl}}.svg" id="{{item.id}}" [ngStyle]="{'opacity': item.availability === true ? 1:0.15}">
+        </div>
+        <div class="content">
+          <div class="header">
+            <strong class="header left  floated ">{{item.name}}</strong>
+          </div>
+
+          <div *ngIf="(item.availability === true)">
+            <span class="left floated">
+              <i class="rupee sign icon"></i>{{item.price}}
+            </span>
+            <div class="ui toggle checkbox right floated  ">
+              <input type="checkbox" name="itemstatus" id="{{item.id}}status" (click)="dim(item)" checked>
+              <label>Available</label>
+            </div>
+          </div>
+          <div *ngIf="(item.availability === false)">
+            <span class="left floated">
+              <i class="rupee sign icon"></i>{{item.price}}
+            </span>
+            <div class="ui toggle checkbox right floated">
+              <input type="checkbox" name="itemstatus" id="{{item.id}}status" (click)="dim(item)">
+              <label>Unavailable</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="itemToBeUpdated">
+    <div class="ui mini modal" id="items-option-modal" style="width:800px">
+      <div class="sixteen wide column" style="margin-top:0px;padding-bottom:0rem;padding-top:0rem;">
+        <div class="ui fluid card">
+          <i class="black close icon" (click)="closeModal()" style="position:absolute;top:10;right:0;cursor:pointer"></i>
+          <div class="actions" align='right'>
+            <div *ngIf="visible" style="margin-top:1%;" align='left'>
+              <div class="ui green message" id='itemUpdated'>Item Updated successfully!!</div>
+            </div>
+          </div>
+          <div class="content">
+            <form class="ui form" [(formGroup)]="updateItemForm" method="POST">
+              <div class="field">
+                <label>Item name</label>
+                <div class="ui input">
+                  <input placeholder="item name" formControlName="itemname" ngDefaultControl>
+                </div>
+              </div>
+              <div class="ui negative message" [hidden]="updateItemForm.controls.itemname.valid || updateItemForm.controls.itemname.untouched">
+                <p>Item name cannot be empty
+                </p>
+              </div>
+              <div class="field">
+                <label>Item category</label>
+                <div class="ui simple inline pointing dropdown link item" style="width:250px;border:30px">
+                  <i class="dropdown icon"></i>
+                  <img class="ui mini image" src="../../assets/items/{{itemToBeUpdated.categoryId}}.svg">
+                  <div class="scrolling menu" style="display:inline-block;overflow-y:auto;height:200px;border:0.5px solid rgb(235, 232, 232)">
+                    <div class="item" *ngFor="let cat of category" (click)="changepropUpdateItem(cat.id)">
+                      <img class="ui avatar image" src="../../assets/items/{{cat.id}}.svg"> {{cat.name}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Item description</label>
+                <div class="ui input">
+                  <input type="text" formControlName="itemdesc" (keyup)="verify()" ngDefaultControl>
+                </div>
+              </div>
+              <div class="ui negative message" [hidden]="updateItemForm.controls.itemdesc.valid || updateItemForm.controls.itemdesc.untouched">
+                <p>Item description cannot be empty
+                </p>
+              </div>
+              <div class="field">
+                <label>Item price</label>
+                <div class="ui  labeled input four wide field">
+                  <div class='ui label'>
+                    <i class="rupee sign icon"></i>
+                  </div>
+                  <input type="number" min=1 formControlName="itemprice" (keyup)="verify()" ngDefaultControl>
+                </div>
+              </div>
+              <div class="ui negative message" [hidden]="updateItemForm.controls.itemprice.valid || updateItemForm.controls.itemprice.untouched">
+                <p>Item price cannot be empty
+                </p>
+              </div>
+              <div align='right'>
+                <button type="submit" class="ui right labeled icon red button" [disabled]="isDisabled" (click)="deleteItem(itemToBeUpdated)">
+                  Delete
+                  <i class="trash icon"></i>
+                </button>
+
+                <button type="submit" class="ui right labeled icon green button" [disabled]="isDisabled" (click)="updateItem(itemToBeUpdated)">
+                  <i class="right arrow icon"></i>
+                  Update
+                </button>
+                <br>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui centered grid" style="margin-top:5rem;" *ngIf="noResults">
+    <div class="seven wide column">
+      <div class="ui centered basic segment" style="text-align:center;opacity:.7;">
+        <div class="content">
+          No items matched your search
+        </div>
+      </div>
+    </div>
+  </div>

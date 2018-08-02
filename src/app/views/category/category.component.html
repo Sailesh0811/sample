@@ -1,0 +1,93 @@
+<div style="padding:2%">
+  <button type="add" class="ui right pink labeled icon button" (click)="AddCatModal()" style="float:right;padding-right:10px">
+    <i class="add icon"></i>
+    Add Category
+  </button>
+</div>
+
+<div class="ui four link stackable cards" style="max-width:100%;top:20px;position:relative;left:20px;margin-bottom:20%;padding:4rem;">
+  <div *ngFor="let cat of categoryList ">
+    <div class="card" style="margin:10%;top:10%">
+      <div class="ui card">
+        <div class="ui segment" id="1{{cat.id}}" (click)="updateCategory(cat)">
+          <img class="ui small centered image" src="../../../assets/{{cat.categoryUrl}}.svg" alt="">
+          <strong class="text-centered">{{cat.name}}</strong>
+        </div>
+        <div *ngIf="(cat.status === true)" style="height:30px">
+          <div class="ui toggle checkbox">
+            <input type="checkbox" name="catstatus" id="{{cat.id}}status" (click)="dim(cat)" checked>
+            <label>Category Available</label>
+          </div>
+        </div>
+        <div *ngIf="(cat.status === false)" style="height:30px">
+          <div class="ui toggle checkbox">
+            <input type="checkbox" name="catstatus" id="{{cat.id}}status" (click)="dim(cat)">
+            <label>Category UnAvailable</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="category" class="ui tiny modal" id="editModel">
+  <div class="four wide column" style="margin-top:0rem;padding-bottom:0rem;">
+    <div class="ui fluid card">
+      <i class="black close icon" (click)="closeUpdateCategoryModal()" style="position:absolute;top:10;right:0;cursor:pointer"></i>
+      <div class="content">
+        <form class="ui form" [(formGroup)]="editCategoryForm" method="POST">
+          <div class="field">
+            <label>Category name</label>
+            <div class="ui input">
+              <input placeholder="category name" formControlName="categoryname" ngDefaultControl>
+            </div>
+          </div>
+          <div class="ui negative message" [hidden]="editCategoryForm.controls.categoryname.valid|| editCategoryForm.controls.categoryname.touched">
+            <p>Category name cannot be empty
+            </p>
+          </div>
+
+          <button type="reset" class="ui left labeled icon button" (click)="changeprop(100)">
+            <i class="left arrow icon"></i>
+            Reset
+          </button>
+          <div class="ui approve blue button" (click)="editCategory(category)">
+            Update
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="display" class="ui small modal" id="addModal" style="width:600px">
+    <div class="sixteen wide column" style="margin-top:0px;padding-bottom:0rem;padding-top:0rem;">
+
+       <div class="ui fluid card">
+        <i class="black close icon" (click)="closeModal()" style="position:absolute;top:20;right:0;cursor:pointer"></i>
+        <div class="content">
+          <form class="ui form" [(formGroup)]="addCategoryForm" method="POST">
+            <div class="field">
+              <label>Category name</label>
+              <div class="ui right labeled input">
+                <input type="text" placeholder="Category name" formControlName="itemcategoryadd" (keyup)="verifyadd()">
+              </div>
+            </div>
+            <p class="error" [hidden]="addCategoryForm.controls.itemcategoryadd.valid || addCategoryForm.controls.itemcategoryadd.untouched">
+              Category name cannot be empty
+
+            </p>
+          </form>
+          <div *ngIf="visible" style="margin-top:1%;">
+            <div class="ui green message">Category Added successfully!!</div>
+          </div>
+          <button type="submit" align="right" class="ui right labeled icon green button" [disabled]="isDisabled" (click)="addNewCat()">
+            <i class="right arrow icon"></i>
+            Add
+          </button>
+          
+        </div>
+      </div>
+     </div>
+</div>

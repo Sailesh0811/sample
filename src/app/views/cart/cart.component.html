@@ -1,0 +1,282 @@
+
+<div class="ui centered grid computer only">
+  <div class="seven wide column">
+      <div class="ui pink message" style="margin-top:2rem;" *ngIf="!shopStatus">          
+          <div class="header">
+            Our pantry is closed now
+          </div>
+          Please try ordering after sometime
+        </div>
+    <div class="ui raised attached centered segment" style="margin-top:2rem;padding-bottom:2rem;">
+      <div class="header">Cart Items
+        <span class="right aligned" (click)="check=true;insufficient=false;clearDetails();mode='';" *ngIf="!check" style="float:right;color:#f62d89;cursor:pointer;">
+          <i class="left arrow icon" style="color:#f62d89;"></i>Back to cart
+        </span>
+        <span class="right aligned" routerLink="/employee/menu"  *ngIf="check" style="float:right;color:#f62d89;cursor:pointer;">
+          <i class="left arrow icon" style="color:#f62d89;"></i>Back to Menu
+        </span>
+      </div>
+      <table class="ui celled padded table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>
+              <h4 class="ui image header">
+                <img src="../../assets/items/{{item.imageUrl}}.svg" class="ui rounded image">
+                <div class="content">
+                  {{item.name}}
+                  <div class="sub header">
+                    <i class="rupee sign icon"></i>{{item.price}}
+                  </div>
+                </div>
+              </h4>
+            </td>
+            <td>
+
+              <i class="minus icon" (click)="reduce(item)" *ngIf="check" style="color:#f62d89;cursor:pointer;"></i>
+              <strong style="padding-right:0.3rem;">{{item.quantity}}</strong>
+
+              <i class="add icon" (click)="add(item)" *ngIf="check" style="color:#f62d89;cursor:pointer;"></i>
+
+            </td>
+            <td>
+              <i class="rupee sign icon"></i>{{item.amount}}</td>
+          </tr>
+
+        </tbody>
+
+        <tfoot class="full-width">
+          <tr>
+            <th></th>
+            <th>Total Amount:</th>
+            <th>
+              <i class="rupee sign icon"></i>{{totalAmount}}</th>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="ui transparent input full-width" style="width:100%;">
+        <i class="large quote left icon"></i>
+        <input type="text" placeholder="Suggestions if any we'll pass it on" [(ngModel)]="userComments">
+      </div>
+      <div class="extra-content" *ngIf="!this.check" style="margin-top:0.9rem;">
+        <table class="ui celled table">
+          <tbody>
+            <tr>
+              <td>Total Amount</td>
+              <td>
+                <strong>
+                  <i class="rupee sign icon"></i>{{totalAmount}}</strong>
+              </td>
+            </tr>
+            <tr *ngFor="let summary of orderDetails">
+              <td>{{summary.type}}</td>
+              <td>
+                <i class="rupee sign icon"></i>{{summary.cash}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="extra-content" style="margin-top:1rem;">
+        <div class="ui form" *ngIf="insufficient">
+          <div class="inline fields">
+            <label>Payment mode:</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="mode" checked="checked" [(ngModel)]="mode" value="cash">
+                <label>Cash</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="mode" [(ngModel)]="mode" value="borrow">
+                <label>Borrow</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui form" *ngIf="mode == 'borrow'">
+          <div class="equal width fields">
+            <div class="field">
+              <label>Employee Code*</label>
+              <input type="text" placeholder="Employee Code" [(ngModel)]="employeeCode" (keyup)="validate()">
+              <p class="error" [hidden]="isEmployee">EmployeeCode is invalid
+              </p>
+            </div>
+            <div class="field">
+              <label>Pin*</label>
+              <input type="text" placeholder="Pin" [(ngModel)]="pin" (keyup)="validate()">
+              <p class="error" [hidden]="isPin">Pin is invalid
+              </p>
+            </div>
+            <div class="field">
+              <label>Verify</label>
+              <button class="ui small icon button" [disabled]="verifyDisabled" (click)="borrowBytes()">
+                <i class="check icon"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="ui btn bottom attached button" (click)="checkout()" *ngIf="check&&shopStatus">
+      Checkout
+    </div>
+    <div class="ui btn bottom attached button" (click)="payBytes()" *ngIf="payWithBytes">
+      <i class="add icon"></i>
+      Place Order
+    </div>
+    <div class="ui btn bottom attached button" (click)="payInsufficient()" *ngIf="mode=='cash'">
+      <i class="add icon"></i>
+      Place Order
+    </div>
+    <div class="ui btn bottom attached button" *ngIf="placeOrder" (click)="createNewOrder()">
+      <i class="add icon"></i>
+      Place Order
+    </div>
+  </div>
+
+</div>
+<div class="ui centered grid mobile tablet only" style="padding-bottom:1rem;">
+  <div class="column">
+      <div class="ui pink message" style="margin-top:2rem;" *ngIf="!shopStatus">          
+          <div class="header">
+            Our pantry is closed now
+          </div>
+          Please try ordering after sometime
+        </div>
+    <div class="ui raised attached centered segment" style="margin-top:2rem;padding-bottom:2rem;">
+      <div class="header">Cart Items</div>
+      <table class="ui celled padded table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>
+              <h4 class="ui image header">
+                <img src="../../assets/items/{{item.imageUrl}}.svg" class="ui rounded image">
+                <div class="content">
+                  {{item.name}}
+                  <div class="sub header">
+                    <i class="rupee sign icon"></i>{{item.price}}
+                  </div>
+                </div>
+              </h4>
+            </td>
+            <td>
+
+              <i class="minus icon" (click)="reduce(item)" *ngIf="check" style="color:#f62d89;cursor:pointer;"></i>
+              <strong style="padding-right:0.3rem;">{{item.quantity}}</strong>
+
+              <i class="add icon" (click)="add(item)" *ngIf="check" style="color:#f62d89;cursor:pointer;"></i>
+
+            </td>
+            <td>
+              <i class="rupee sign icon"></i>{{item.amount}}</td>
+          </tr>
+
+        </tbody>
+
+        <tfoot class="full-width">
+          <tr>
+            <th></th>
+            <th>Total Amount:</th>
+            <th>
+              <i class="rupee sign icon"></i>{{totalAmount}}</th>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="ui transparent input full-width" style="width:100%;">
+        <i class="large quote left icon"></i>
+        <input type="text" placeholder="Suggestions if any we'll pass it on" [(ngModel)]="userComments">
+      </div>
+      <div class="extra-content" *ngIf="!this.check" style="margin-top:0.9rem;">
+        <table class="ui celled table">
+          <tbody>
+            <tr>
+              <td>Total Amount</td>
+              <td>
+                <strong>
+                  <i class="rupee sign icon"></i>{{totalAmount}}</strong>
+              </td>
+            </tr>
+            <tr *ngFor="let summary of orderDetails">
+              <td>{{summary.type}}</td>
+              <td>
+                <i class="rupee sign icon"></i>{{summary.cash}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="extra-content" style="margin-top:1rem;">
+        <div class="ui form" *ngIf="insufficient">
+          <div class="inline fields">
+            <label>Payment mode:</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="mode" value="cash">
+                <label>Cash</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="mode" value="borrow">
+                <label>Borrow</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui form" *ngIf="mode == 'borrow'">
+          <div class="equal width fields">
+            <div class="field">
+              <label>Employee Code*</label>
+              <input type="text" placeholder="Employee Code" [(ngModel)]="employeeCode" (keyup)="validate()">
+              <p class="error" [hidden]="isEmployee">EmployeeCode is invalid
+              </p>
+            </div>
+            <div class="field">
+              <label>Pin*</label>
+              <input type="text" placeholder="Pin" [(ngModel)]="pin" (keyup)="validate()">
+              <p class="error" [hidden]="isPin">Pin is invalid
+              </p>
+            </div>
+            <div class="field">
+              <label>Verify</label>
+              <button class="ui small icon button" [disabled]="verifyDisabled" (click)="borrowBytes()">
+                <i class="check icon"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="ui btn bottom attached button" (click)="checkout()" *ngIf="check && shopStatus">
+      Checkout
+    </div>
+    <div class="ui btn bottom attached button" (click)="payBytes()" *ngIf="payWithBytes">
+      <i class="add icon"></i>
+      Place Order
+    </div>
+    <div class="ui btn bottom attached button" (click)="payInsufficient()" *ngIf="mode=='cash'">
+      <i class="add icon"></i>
+      Place Orders
+    </div>
+    <div class="ui btn bottom attached button" *ngIf="placeOrder" (click)="createNewOrder()">
+      <i class="add icon"></i>
+      Place Order
+    </div>
+  </div>
+
+</div>

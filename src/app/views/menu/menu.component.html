@@ -1,0 +1,154 @@
+<div class="ui container" style="margin-top:2rem;">
+    <div class="ui stackable grid">
+      <div class="three wide column">
+        <span>
+  
+          <div class="ui simple inline  dropdown" id="categorySelect">
+            <div class="default text">
+              <i class="filter icon"></i> Category
+            </div>
+            <i class="dropdown icon"></i>
+            <div class="menu" style="display:inline-block;overflow-y:auto;height:200px;border:0.5px solid rgb(235, 232, 232)">
+              <div class="item" *ngFor="let cat of category" (click)="clickCategory(cat)" (keyup)="clickCategory(cat)">
+                <img class="ui avatar image" src="../../assets/{{cat.categoryUrl}}.svg"> {{cat.name}}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+      <span class="eight wide column">
+        <span *ngFor="let item of selectedItemList">
+          <span class="ui label" style="background-color:#f62d89;color:white;margin-top:0.25rem">
+            {{item.name}}
+            <i class="white delete icon" (click)="deselectedItem(item)"></i>
+          </span>
+  
+        </span>
+        <span *ngIf="(selectedItemList.length > 0)" class="ui label" (click)="clearSelectedCategories()" style="background-color:#f62d89;color:white;margin-right:.5rem;cursor:pointer">
+          Reset
+        </span>
+      </span>
+      <div class="left five wide column">
+  
+        <span class="ui right floated category search" style="float:right;">
+          <div class="ui icon input">
+            <input class="prompt" type="text" placeholder="Search Food" [(ngModel)]="searchText" (keyup)="search()">
+            <i class="search icon"></i>
+          </div>
+        </span>
+  
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 1.0rem;padding-bottom:2rem;">
+    <div class="ui container">
+        <div class="ui pink message" *ngIf="!shopStatus">
+            
+            <div class="header">
+                Our pantry is closed now
+            </div>
+            Please try ordering after sometime
+          </div>
+      <div class="ui four doubling  cards">
+        <div *ngFor="let item of itemsList" class="ui link card">
+          <div class="ui centered image" style="background:white;padding:rem;" (click)="ratingsReviews(item)">
+            <img style="height:150px;padding:1rem;" src="../../assets/items/{{item.imageUrl}}.svg">
+          </div>
+          <div class="content">
+            <a class="header" style="font-size:1.0rem;" (click)="ratingsReviews(item)">{{item.name}}
+              <span class="right floated">
+                <div class="left floated" *ngIf="item.rating > 0 "  title="click to view user reviews">
+                  <div class="rating" *ngFor="let n of [1,2,3,4,5]" style="display: inline-block;">
+                    <i *ngIf="n <= item.rating" class="star icon" style="color:gold;"></i>
+                    <i *ngIf="n > item.rating" class="star icon"></i>
+                  </div>
+                </div>
+              </span>
+            </a>
+            <div class="description">
+              <i class="rupee sign icon"></i>
+              <strong style="font-weight:bolder;">{{item.price}}</strong>
+  
+              <span class="right floated">
+  
+                <i class="minus icon" (click)="reduce(item)" style="color:#f62d89;cursor:pointer;"></i>
+  
+                <span *ngIf="item.quantity != null">
+                  <strong style="padding-right:0.2rem;"> {{item.quantity}} </strong>
+                </span>
+  
+                <i class="add icon" (click)="add(item)" style="color:#f62d89;cursor:pointer;"></i>
+  
+              </span>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+    <div *ngIf="itemSelected">
+      <div class="ui long modal" id="rating-review-modal" style="width:800px;">
+        <div class="header">
+          User Ratings and Reviews
+          <span style="float:right;padding-right:4%">
+            <i class="close icon" (click)="closeModal()" style="position:absolute;top:0;right:0;cursor:pointer;"></i>
+          </span>
+        </div>
+        <div class="content" style="font-size: 20px">
+          <img src="../../assets/items/{{itemSelected.imageUrl}}.svg" style="float:left;height:50px;padding-right:2%">
+          <strong>{{itemSelected.name}}</strong>
+          <br> {{itemSelected.description}}
+        </div>
+        <div class="content">
+          <span style="font-size: 18px;"> Rating:
+            <div class="ui huge star rating" id='item-user-rating'></div>
+          </span>
+          <form class="ui reply form">
+            <div class="field">
+              <textarea placeholder=" Your Reviews for {{itemSelected.name}}:" rows='3' [(ngModel)]='review' [ngModelOptions]="{standalone: true}"></textarea>
+            </div>
+            <div class="ui right floated blue labeled submit icon button" (click)="updateRatingReview(review,itemSelected.id)">
+              <i class="icon edit"></i> Submit Review
+            </div>
+            <!-- <div class="ui right floated blue labeled disabled submit icon button" *ngIf="!review">
+              <i class="icon edit"></i> Submit Review
+            </div> -->
+          </form>
+        </div>
+        <h3 class="ui dividing header">Reviews</h3>
+        <div class="content" *ngIf="!(itemSelected.ratingList.length)">
+          Be the First to Review.
+        </div>
+        <div class="ui comments" *ngFor="let reviews of itemSelected.ratingList, let index=index ">
+          <div class="comment" style="padding-left:3%;padding-bottom:1%;">
+            <a class="avatar">
+              <img src='../assets/avatar/{{reviews.user.userUrl}}.png' style="height:50px;width:50px">
+            </a>
+            <div class="scrolling content" style="width:700px;height:60px">
+              <div class="author" style="font-size:14px;">
+                <strong>{{reviews.user.firstName}} {{reviews.user.lastName}}</strong>
+                <div class="rating" *ngFor="let dummy of ' '.repeat(reviews.rating).split('')" style="display: inline-block;">
+                  <i class="star icon" style="color:gold"></i>
+                </div>
+              </div>
+              <div class="text" style="padding-left:2%" *ngIf="reviews.review">
+                {{reviews.review}}
+              </div>
+              <div class="text" style="padding-left:2%;opacity:.7;" *ngIf="!reviews.review">
+                No review
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui centered grid" style="margin-top:5rem;" *ngIf="noResults">
+    <div class="seven wide column">
+      <div class="ui centered basic segment" style="text-align:center;opacity:.7;">
+        <div class="content">
+          No items matched your search
+        </div>
+      </div>
+    </div>
+  </div>

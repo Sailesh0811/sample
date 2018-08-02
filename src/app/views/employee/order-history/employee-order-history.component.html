@@ -1,0 +1,170 @@
+<style>
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+
+
+<div class="ui centered basic segment" *ngIf="(employeeOrderHistory)==(null) || (employeeOrderHistory.length==0)" style="text-align:center;opacity:.7;margin-top:11rem;">
+    <div class="content">
+        No Orders Found
+    </div>
+</div>
+<div *ngIf="(employeeOrderHistory?.length>0)" style="margin-top:5rem;">
+    <div class="container" style="padding-bottom:2%;max-width:1000px;margin:0 auto;">
+        <div>
+
+            <div class="ui simple selection dropdown" style="margin-bottom:2%;float:right">
+                <i class="dropdown icon"></i>
+                <div class="default text" style="color:black">{{limit}}</div>
+                <div class="menu">
+                    <div class="item" (click)="setLimit(5)">5</div>
+                    <div class="item" (click)="setLimit(10)">10</div>
+                    <div class="item" (click)="setLimit(15)">15</div>
+                </div>
+            </div>
+            
+            <div style="margin:1%;float:left;font-weight:bold;font-size:16px">
+                Showing orders {{limit * (currentPage-1)+1 }} to {{limit * (currentPage-1)+1 + employeeOrderHistory?.length -1}} of {{page.totalCount}} orders
+            </div>
+        </div>
+        <table class="ui selectable celled unstackable table" style="max-width:1050px;margin:0 auto;border:1px solid black;">
+            <thead>
+                <tr class="center aligned">
+                    <th class="two wide" style=" font-size:14px; ">Status</th>
+                    <th class="one wide" style=" font-size:14px; ">Order Id</th>
+                    <th class="four wide" style=" font-size:14px;">Order Initiation Time</th>
+                    <th class="two wide" style=" font-size:14px; ">Bytes</th>
+                    <th class="two wide" style=" font-size:14px; ">Borrow</th>
+                    <th class="two wide" style=" font-size:14px; ">Cash</th>
+                    <th class="three wide" style=" font-size:14px; ">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let order of employeeOrderHistory, let serialNumber=index">
+                <tr class="center aligned" (click)="viewDetails(order)">
+                    <div *ngIf="order.status=='DELIVERED'">
+                        <td>
+                            <div class="ui center aligned green ribbon label" style="width:150px;">
+                                {{order.status}}</div>
+                        </td>
+                    </div>
+                    <div *ngIf="order.status=='DECLINED'">
+                        <td>
+                            <div class="ui center aligned orange ribbon label" style="width:150px;">
+                                {{order.status}}</div>
+                        </td>
+                    </div>
+                    <div *ngIf="order.status=='CANCELLED'">
+                        <td>
+                            <div class="ui center red aligned ribbon label" style="width:150px;">
+                                {{order.status}}</div>
+                        </td>
+                    </div>
+                    <td>
+                        {{order.id}}
+                    </td>
+                    <td ng-controller="datCtrl">
+                        {{order.orderInitiationTime|date:"dd/MM/yyyy h:mm a"}}
+                    </td>
+                    <td>
+                        <i class="rupee sign icon"></i>{{order.amountInBytes}}
+                    </td>
+                    <td>
+                        <i class="rupee sign icon"></i>{{order.borrowedBytes}}
+                    </td>
+                    <td>
+                        <i class="rupee sign icon"></i>{{order.amountInCash}}
+                    </td>
+                    <td>
+                        <i class="rupee sign icon"></i>{{order.totalAmount}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="ui centered pagination menu" style="margin-top:2%;float:right">
+            <a class="item" (click)="getAllOrders(1)" *ngIf="currentPage!=1">
+                <i class="angle double left icon"></i>
+            </a>
+            <a class="item" (click)="notify('This is the first page')" *ngIf="currentPage==1" style="pointer-events: none;
+            cursor: default;">
+                <i class="angle double left icon"></i>
+            </a>
+            <a class="item" (click)="getAllOrders(currentPage-1)" *ngIf="currentPage != 1 ">
+                <i class="angle left icon"></i>
+            </a>
+            <a class="item" (click)="notify('This is the first page')" *ngIf="currentPage == 1 " disabled="disabled" style="pointer-events: none;
+            cursor: default;">
+                <i class="angle left icon"></i>
+            </a>
+            <a class="item" (click)="getAllOrders(currentPage)">
+                {{currentPage}} of {{totalNoOfPages}}
+            </a>
+            <a class="item" (click)="getAllOrders(currentPage+1)" *ngIf="totalNoOfPages > currentPage ">
+                <i class="angle right icon"></i>
+            </a>
+            <a class="item" (click)="getAllOrders(totalNoOfPages)" *ngIf="totalNoOfPages > currentPage ">
+                <i class="angle double right icon"></i>
+            </a>
+            <a class="item" (click)="notify('This is the last page')" *ngIf="currentPage == totalNoOfPages " disabled="disabled" style="pointer-events: none;
+            cursor: default;">
+                <i class="angle right icon"></i>
+            </a>
+            <a class="item" (click)="notify('This is the last page')" *ngIf="currentPage == totalNoOfPages " disabled="disabled" style="pointer-events: none;
+            cursor: default;">
+                <i class="angle double right icon"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div *ngIf="orderDisplay">
+    <div class="ui modal" id="order-details-modal" style="width:40%;position:relative;margin-left:-20%;">
+        <div class="ui centered violet card" style="width:auto;">
+            <div class="header" style="max-width:300px">
+                <div class="ui large label" style="background-color:white;color:black;font-size:16px">
+                    Order Id: {{orderDisplay.id}}
+                </div>
+                <i class="close icon" (click)="closeModal()" style="cursor:pointer;position:absolute;right:2%;top:5%"></i>
+            </div>
+            <div class="scrolling content">
+                <div class="description">
+                    <table class="ui striped table" style="overflow-y:auto;">
+                        <thead>
+                            <th rowspan="2">S.no</th>
+                            <th rowspan="2">Item Name</th>
+                            <th rowspan="2">Quantity</th>
+                            <th rowspan="2">Amount</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of orderDisplay.items, let serialNumber=index">
+                                <td>{{serialNumber+1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.price*item.quantity}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <strong>Total Amount</strong>
+                                </td>
+                                <td>{{orderDisplay.totalAmount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

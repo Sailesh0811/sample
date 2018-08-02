@@ -1,0 +1,118 @@
+<div class="layout" style="height:100%;width:100%;margin-top:0%">
+
+  <div class="ui pushable basic segment">
+    <div class="ui sidebar  vertical menu " (click)="closeSideBar()">
+      <div class="item">
+        <a class="logo icon image item" routerLink="/employee/viewReport">
+          <img class="large" style="width:170px;" src="/../../assets/coda-gray.png">
+        </a>
+      </div>
+      <div class="item">
+        <div class="header">Menu</div>
+        <div class="menu">
+          <a class="item" routerLink="/employee/menu" routerLinkActive="active">View Menu</a>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header">Order Details</div>
+        <div class="menu">
+          <a class="item" routerLink='/employee/orderDetails' routerLinkActive="active">Active Orders</a>
+          <a class="item" routerLink='/employee/orderHistory' routerLinkActive="active">Order History</a>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header">Profile</div>
+        <div class="menu">
+          <a class="item" routerLink='/employee/profile' routerLinkActive="active">My Account</a>
+          <a class="item" routerLink='/employee/viewReport' routerLinkActive="active">View Reports</a>
+        </div>
+      </div>
+      <div class="item" *ngIf="role === 'ROLE_Admin'">
+        <div class="header">Admin Menu</div>
+        <div class="menu">
+          <a class="item" routerLink='/employee/report' routerLinkActive="active">View Reports</a>
+          <a class="item" routerLink='/employee/users' routerLinkActive="active">Manage Users</a>
+        </div>
+      </div>
+      <div class="item" *ngIf="role === 'ROLE_Admin'">
+        <button class="ui blue button" (click)="creditBytesDetails()">Credit Bytes</button>
+      </div>
+      <div class="item">
+        <button class="ui button" style="background-color:#f62d89;color:#ffffff;" (click)="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="pusher" style="margin-top:0%;">
+      <div class="column">
+        <div class="ui small stackable menu">
+          <a id="mobile_item" class="item">
+            <i class="bars icon"></i>
+          </a>
+          <div class="left menu">
+            <a class="logo icon image item" routerLink="/employee/viewReport">
+              <img class="large" style="width:170px;" src="/../../assets/coda-gray.png">
+            </a>
+            <a class="item" routerLink="/employee/menu" routerLinkActive="active">
+              Menu
+            </a>
+            <div class="ui dropdown item">
+              Order Details
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <a class="item" routerLink='/employee/orderDetails' routerLinkActive="active">Active Orders</a>
+                <a class="item" routerLink='/employee/orderHistory' routerLinkActive="active">Order History</a>
+              </div>
+            </div>
+          </div>
+          <div class="right menu">
+            <a class="item popup" (click)="showCart()" data-content="Click here to checkout" data-variation="basic">
+              <a class="ui circular label" style="background-color:#f62d89;">{{cartLength}}</a>
+              <i class="large shopping cart icon"></i>
+              <i class="rupee sign icon"></i>{{cartValue}}
+            </a>
+
+            <div class="ui dropdown item">
+              {{employeeName}}
+              <img class="ui right spaced avatar image" src="../../assets/avatar/{{userUrl}}.png">
+
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <div class="item" routerLink="/employee/profile">My Account</div>
+                <div class="item" routerLink="/employee/viewReport">Reports</div>
+                <div class="item" (click)="logout()">Logout</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <router-outlet>
+
+      </router-outlet>
+
+
+    </div>
+  </div>
+</div>
+<div class="ui modal" id="credit-bytes-modal" style="width:400px;position:relative;margin-left:-150px;">
+  <div class="header" style="color:rgb(61, 17, 17)">
+    Global Credit Bytes
+  </div>
+  <div class="content" style="font-size:18px">
+    <form>
+      <strong>Bytes to be credited</strong>
+      <input type="number" [(ngModel)]="bytes" [ngModelOptions]="{standalone: true}" style="width:30%;float:right">
+    </form>
+    <div class="left floated time" ng-controller="datCtrl" style="color:brown;font-size:14px;padding-top:5%;" *ngIf="lastcreditedDetails">
+      <i class="clock icon"></i>
+      Last Byte Update:{{lastcreditedDetails | date:"short"}}
+    </div>
+    <i class="close icon" (click)="closeModal()" style="cursor:pointer;position:absolute;right:1em;top:1em;"></i>
+  </div>
+  <div class="actions">
+    <div class="ui grey button" (click)="closeModal()">
+      Cancel
+    </div>
+    <div class="ui blue button" (click)="creditBytes()">
+      Credit Bytes
+    </div>
+  </div>
+</div>

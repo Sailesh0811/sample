@@ -1,0 +1,98 @@
+<div class="layout" style="height:100%;width:100%;">
+  <div class="ui pushable basic segment">
+    <div class="ui sidebar vertical menu ">
+      <div class="item">
+        <strong style="font-size:2.5rem;">Coda
+          <i style="color:#f62d89;">Bytes</i>
+        </strong>
+
+      </div>
+      <div class="item">
+        <div class="header">Menu</div>
+        <div class="menu">
+          <a class="item" routerLink="/home/updateAvailablity" routerLinkActive="active">Update Availability</a>
+          <a class="item" routerLink="/home/additems" routerLinkActive="active">Add Item</a>
+          <a class="item" routerLink="/home/category" routerLinkActive="active">Manage Categories</a>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header">Order Details</div>
+        <div class="menu">
+          <a class="item" routerLink='/home/pendingOrders' routerLinkActive="active">New Orders </a>
+          <a class="item" routerLink='/home/orderQueue' routerLinkActive="active">Order Queue</a>
+          <a class="item" routerLink='/home/orderHistory' routerLinkActive="active">Order History</a>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header">Reports</div>
+        <div class="menu">
+          <a class="item" routerLink='/home/reports' routerLinkActive="active">Check Reports</a>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header">Intiate Order</div>
+        <div class="menu">
+          <a class="item" routerLink='/home/newOrder' routerLinkActive="active">New order</a>
+        </div>
+      </div>
+      <div class="item">
+        <button class="ui button" style="background-color:#f62d89;color:#ffffff;" (click)="logout()">Logout</button>
+      </div>
+    </div>
+
+
+
+
+    <div class="pusher">
+      <div class="column">
+        <div class="ui small stackable menu">
+          <a id="mobile_item" class="item">
+            <i class="bars icon"></i>
+          </a>
+          <div class="left menu">
+            <a class="item" routerLink="/home/newOrder">
+              <strong style="font-size:2.5rem;">Coda
+                <i style="color:#f62d89;">Bytes</i>
+              </strong>
+            </a>
+            <a class="item" routerLink="/home/updateAvailablity"  routerLinkActive="active">
+              Availability
+            </a>
+            <div class="ui dropdown item">
+                Order Details <i class="dropdown icon"></i>
+                <div class="menu">
+                  <a class="item" routerLink='/home/pendingOrders' routerLinkActive="active">New Orders</a>
+                  <a class="item" routerLink='/home/orderQueue' routerLinkActive="active">Order Queue</a>
+                  <a class="item" routerLink='/home/orderHistory' routerLinkActive="active">Order History</a>                                  
+                </div>
+              </div>
+          </div>
+          <div class="right menu">
+              <a class="item popup" (click)="showCart()" data-content="Click here to checkout" data-variation="basic">
+                  <a class="ui circular label" style="background-color:#f62d89;">{{cartLength}}</a>
+                <i class="large shopping cart icon"></i>            
+                <i class="rupee sign icon"></i>{{cartValue}}
+              </a>
+    
+              <div class="ui dropdown item">
+                {{employeeName}}
+                <i class="dropdown icon"></i>
+                <div class="menu">              
+                  <div class="item" routerLink="/home/reports">Reports</div>
+                  <div class="item" (click)="logout()">Logout</div>
+                </div>
+              </div>
+              </div>
+            </div>
+      </div>
+
+
+
+      <router-outlet>
+
+      </router-outlet>
+
+
+    </div>
+  </div>
+</div>

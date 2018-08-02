@@ -1,0 +1,24 @@
+<div *ngIf="show" class="ui grid notification" [@enterAnimation]>
+
+  <div class="column" *ngIf="type=='success'">
+    <div id="alert" class="ui floating  positive message">
+      <i class="close icon" (click)="hide()"></i>
+
+      {{error}} </div>
+  </div>
+
+  <div class=" column" *ngIf="type == 'error'">
+    <div id="alert" class="ui floating  negative message">
+      <i class="close icon" (click)="hide()"></i>
+
+      {{error}} </div>
+  </div>
+  <div class=" column" *ngIf="type == 'info'">
+      <div id="alert" class="ui floating  info message">
+        <i class="close icon" (click)="hide()"></i>  
+        {{error}} </div>
+    </div>    
+</div>
+<div class="ui active dimmer" *ngIf="load">
+  <div class="ui loader"></div>
+</div>

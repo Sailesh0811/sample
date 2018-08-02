@@ -1,0 +1,104 @@
+<style>
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+<div class="container" style="padding-bottom:2%;max-width:1000px;margin:0 auto;">
+    <div class="ui three column stackable grid" style="max-width:1000px;position:relative;top:20px;left:20px">
+        <div class="column" *ngFor="let order of orderQueue, let orderCount=index">
+            <div class="ui blue raised link card">
+                <div class="content" style="height:260px;">
+                    <img class="right floated mini ui image" src="">
+                    <div class="header">
+                        <div class="ui large label">
+                            #Order Id:{{order.id}}
+                        </div>
+                        <table class="ui single line celled unstackable table" style="display: inline-block; overflow-y: auto;max-height:200px;font-size:11px">
+                            <thead>
+                                <tr>
+                                    <th class="one wide">S.no</th>
+                                    <th class="eleven wide">Items</th>
+                                    <th class="two wide">Qty</th>
+                                    <th class="two wide">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let items of order.items, let serialNumber=index">
+                                    <td> {{serialNumber+1}}</td>
+                                    <td> {{items.name}}</td>
+                                    <td>{{items.quantity}}</td>
+                                    <td>{{items.price}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="height:50px;padding-left:2%;font-size:12px">
+                    <div *ngIf="order.user_comments">
+                        <strong style="font-size:14px">**</strong>
+                        {{order.user_comments}}
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui left floated" style="font-size:12px;">
+                        Amt in Bytes:
+                        <i class="rupee sign icon"></i><strong> {{order.amountInBytes}}</strong>
+                    </div>
+                    <div class="ui right floated" style="font-size:12px;">
+                        Amt in Cash:
+                        <i class="rupee sign icon"></i><strong> {{order.amountInCash}}</strong>
+                    </div>
+                </div>
+                <div class="extra content" style="color:black">
+                    <div class="ui relaxed divided items">
+                        <div class="ui right floated">
+                            Total Amount:
+                            <i class="rupee sign icon"></i> {{order.totalAmount}}
+                        </div>
+                    </div>
+                </div>
+                <div class="extra content" *ngIf="order.status=='CONFIRMED'">
+                    <div class="ui teal button left floated" title="Ready For Pick Up" (click)="orderReady(order)" style="width:120px;font-size:13px;height:35px">Order Ready
+                    </div>
+                    <div class="ui orange button right floated" title="Delivered" (click)="orderPickedUp(order)" style="width:120px;font-size:13px;height:35px">Delivered
+                    </div>
+                </div>
+                <div class="extra content" *ngIf="order.status=='PICKUP'">
+                    <div class="ui teal disabled button left floated" title="Ready For Pick Up" (click)="orderReady(order)" style="width:120px;font-size:13px;height:35px">Order Ready
+                    </div>
+                    <div class="ui orange button right floated" title="Delivered" (click)="orderPickedUp(order)" style="width:120px;font-size:13px;height:35px">Delivered
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="right floated author" style="color:dodgerblue">
+                        <i class="user icon"></i>
+                        {{order.user.firstName}}
+                    </div>
+                    <div class="left floated time" ng-controller="datCtrl" style="color:grey">
+                        <i class="clock icon"></i>
+                        {{order.orderInitiationTime | date:"short"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui centered basic segment"*ngIf="(orderQueue)==(null) || (orderQueue.length==0)" style="text-align:center;opacity:.7;margin-top:11rem;">
+        <div class="content">
+          No Orders Found
+        </div>
+      </div>
+

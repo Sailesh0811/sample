@@ -1,0 +1,79 @@
+<div class="ui stackable centered grid container  ">
+  <div class="eight wide column" style="margin-top:6rem;padding-bottom:2rem;">
+    <div *ngIf="visible" style="margin-top:1%;">
+      <div class="ui green message">Item Added successfully!!</div>
+    </div>
+    <div class="ui fluid card">
+      <div class="content">
+        <form class="ui form" [(formGroup)]="addItemForm" method="POST">
+          <div class="field">
+            <label>Item name</label>
+            <div class="ui input">
+              <input type="text" placeholder="Give a name for your item" formControlName="itemname" (keyup)="verify()">
+            </div>
+            <p class="error" [hidden]="addItemForm.controls.itemname.valid || addItemForm.controls.itemname.untouched">
+
+                Item name cannot be empty
+                
+              </p>
+    
+          </div>
+          
+          <div class="field">
+            <div class="three wide column">
+              <div class="ui simple inline pointing dropdown">
+                Category
+                <i class="dropdown icon"></i>
+                <div class="text">
+                  <img class="ui avatar image" src="../../assets/{{category[0].categoryUrl}}.svg"> {{category[0].name}}
+                </div>
+                <div class="scrolling menu" style="display:inline-block;overflow-y:auto;height:200px;border:0.5px solid rgb(235, 232, 232)">
+                  <div class="item" *ngFor="let cat of category" (click)="changeprop(cat.id)">
+                    <img class="ui avatar image" src="../../assets/{{cat.categoryUrl}}.svg"> {{cat.name}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <div class="field">
+            <label style="margin-top:7px">Item description</label>
+            <div class="ui input">
+              <input type="text" placeholder="Give a description of your item" formControlName="itemdesc" (keyup)="verify()">
+            </div>
+            <p class="error" [hidden]="addItemForm.controls.itemdesc.valid || addItemForm.controls.itemdesc.untouched">
+
+                Item description cannot be empty
+                
+              </p>
+          </div>
+         
+
+
+          <div class="field">
+            <label>Item price</label>
+            <div class="ui  labeled input four wide field">
+              <div class='ui label'>
+                <i class="rupee sign icon"></i>
+              </div>
+              <input type="number" placeholder="Item price" ng-pattern="[^e]*" formControlName="itemprice" (keyup)="verify()">
+            </div>
+            <p class="error" [hidden]="addItemForm.controls.itemprice.valid || addItemForm.controls.itemprice.untouched">
+                Item price is not valid
+                
+              </p>
+          </div>
+         
+          <button type="submit" class="ui right labeled icon right floated primary button " [disabled]="isDisabled" (click)="addItem()">
+            <i class="window plus square outline icon"></i>
+            Add
+          </button>
+          <button type="reset" class="ui right labeled icon right floated red button" (click)="changeprop(5)">
+            <i class="window close outline icon"></i>
+            Reset
+          </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
